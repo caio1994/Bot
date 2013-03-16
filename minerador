@@ -1,0 +1,112 @@
+import org.powerbot.core.script.ActiveScript;
+import org.powerbot.core.script.job.Task;
+import org.powerbot.game.api.Manifest;
+import org.powerbot.game.api.methods.Calculations;
+import org.powerbot.game.api.methods.Walking;
+import org.powerbot.game.api.methods.node.SceneEntities;
+import org.powerbot.game.api.methods.tab.Inventory;
+import org.powerbot.game.api.methods.widget.Bank;
+import org.powerbot.game.api.util.Filter;
+import org.powerbot.game.api.wrappers.Tile;
+import org.powerbot.game.api.wrappers.map.Path;
+import org.powerbot.game.api.wrappers.node.SceneObject;
+
+@Manifest(authors = "Caio", name = "MinerSnZ", version = 1.0, description = "click automatico")
+
+public class minerador extends ActiveScript {
+  public static final Tile localrk = new Tile (3240, 3336, -1);
+	public static final Tile localbk = new Tile (3160, 3360, -1);
+		
+	public void onStart(){
+		System.out.println("o programa iniciou-se");
+	}
+	public void onClose(){
+		System.out.println("o programa encerrou-se");
+	}
+	
+	public int loop(){
+		
+	 if(Inventory.getCount() < 28 ){
+			mineRock();
+		}
+		if(Inventory.getCount() < 28 &  Calculations.distanceTo(localrk) >= 1 ) {
+			walkToRocks(localrk);
+			sleep(2400,2400);
+		}
+		
+		else if(Inventory.getCount() == 28
+					& Calculations.distanceTo(localbk) >= 1 ){
+			walkToBank(localbk);
+			Deposit();
+		}
+		 
+		return 0;
+	}
+	
+	
+	public static void mineRock() {
+		SceneObject rock = SceneEntities.getNearest(11956);
+System.out.println("minerando");
+		
+		if (rock != null) {
+			if (rock.isOnScreen()) {
+				rock.interact("Mine");
+				Task.sleep(1750,2500);
+			}
+		} else {
+			rock = SceneEntities.getNearest(new Filter<SceneObject>() {
+
+				@Override
+				public boolean accept(SceneObject e) {
+					return e.getId() == 0 || e.getId() == 0 || e.getId() == 0;
+				}
+
+			});
+		}
+		
+		sleep(1000,1000);
+		
+	}
+
+	
+
+	public static void walkToBank(Tile tile) {
+		Path path = Walking.findPath(tile);
+        path.traverse();        
+        sleep(500, 500); 
+        Calculations.distanceTo(localbk);
+        System.out.println("indo para o banco");
+        }
+
+
+
+	public static void walkToRocks(Tile tile) {		
+		Path path = Walking.findPath(tile);
+        path.traverse();         
+             Calculations.distanceTo(localrk);
+        System.out.println("indo para rochas");
+	}
+
+
+	 
+	  
+	public static void Deposit() {
+		System.out.println("depositando");
+		if (Bank.isOpen()) {
+			Bank.depositInventory();
+			Bank.close();
+			
+		} else {
+			Bank.open();
+		}
+	}
+
+
+
+	
+	
+	
+	
+	
+	
+}
