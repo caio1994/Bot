@@ -6,7 +6,7 @@ import org.powerbot.game.api.methods.Walking;
 import org.powerbot.game.api.methods.node.SceneEntities;
 import org.powerbot.game.api.methods.tab.Inventory;
 import org.powerbot.game.api.methods.widget.Bank;
-import org.powerbot.game.api.util.Filter;
+
 import org.powerbot.game.api.wrappers.Tile;
 import org.powerbot.game.api.wrappers.map.Path;
 import org.powerbot.game.api.wrappers.node.SceneObject;
@@ -14,7 +14,7 @@ import org.powerbot.game.api.wrappers.node.SceneObject;
 @Manifest(authors = "Caio", name = "MinerSnZ", version = 1.0, description = "click automatico")
 
 public class minerador extends ActiveScript {
-  public static final Tile localrk = new Tile (3240, 3336, -1);
+	public static final Tile localrk = new Tile (3240, 3336, -1);
 	public static final Tile localbk = new Tile (3160, 3360, -1);
 		
 	public void onStart(){
@@ -26,7 +26,7 @@ public class minerador extends ActiveScript {
 	
 	public int loop(){
 		
-	 if(Inventory.getCount() < 28 ){
+		if (!Inventory.isFull() ){
 			mineRock();
 		}
 		if(Inventory.getCount() < 28 &  Calculations.distanceTo(localrk) >= 1 ) {
@@ -53,15 +53,6 @@ System.out.println("minerando");
 				rock.interact("Mine");
 				Task.sleep(1750,2500);
 			}
-		} else {
-			rock = SceneEntities.getNearest(new Filter<SceneObject>() {
-
-				@Override
-				public boolean accept(SceneObject e) {
-					return e.getId() == 0 || e.getId() == 0 || e.getId() == 0;
-				}
-
-			});
 		}
 		
 		sleep(1000,1000);
